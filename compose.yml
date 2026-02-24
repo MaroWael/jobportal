@@ -1,0 +1,11 @@
+services:
+  jobportaldb:
+    image: mysql:latest
+    container_name: jobportaldb
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: jobportal
+    volumes:
+      - "D:/Self Study/New Spring/jobportal-data:/var/lib/mysql"
