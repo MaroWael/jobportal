@@ -2,6 +2,7 @@ package com.eazybytes.jobportal.contact.controller;
 
 import com.eazybytes.jobportal.contact.service.IContactService;
 import com.eazybytes.jobportal.dto.ContactRequestDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContactController {
     private final IContactService contactService;
     @PostMapping(version = "1.0")
-    public ResponseEntity<String> getContacts(@RequestBody ContactRequestDto contactRequestDto) {
+    public ResponseEntity<String> getContacts(@RequestBody @Valid ContactRequestDto contactRequestDto) {
         boolean isSaved = contactService.saveContact(contactRequestDto);
         if(isSaved){
             return ResponseEntity.status(HttpStatus.CREATED).body("success");
