@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,17 +21,18 @@ import java.util.Map;
 public class GlobalExcetionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception exception, WebRequest webRequest) {
+        Map<String, List<String>> errors = Map.of("message", List.of(exception.getMessage()));
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(
                 webRequest.getDescription(false),
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                exception.getMessage(),
-                java.time.LocalDateTime.now()
+                errors,
+                LocalDateTime.now()
         );
         return new ResponseEntity<>(errorResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
-    public ResponseEntity<Map<String, List<String>>> handleException(HandlerMethodValidationException exception) {
+    public ResponseEntity<ErrorResponseDto> handleException(HandlerMethodValidationException exception, WebRequest webRequest) {
         Map<String, List<String>> errors = new HashMap<>();
         List<ParameterValidationResult> results = exception.getParameterValidationResults();
         results.forEach(result -> {
@@ -42,11 +44,17 @@ public class GlobalExcetionHandler {
                 ).add(error.getDefaultMessage());
             });
         });
-        return ResponseEntity.badRequest().body(errors);
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+           webRequest.getDescription(false),
+            HttpStatus.BAD_REQUEST,
+            errors,
+            LocalDateTime.now()
+        );
+        return ResponseEntity.badRequest().body(errorResponseDto);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, List<String>>> handleException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ErrorResponseDto> handleException(MethodArgumentNotValidException exception, WebRequest webRequest) {
         Map<String,  List<String>> errors = new HashMap<> ();
         List<FieldError> fieldErrorList = exception.getBindingResult().getFieldErrors();
         fieldErrorList.forEach(fieldError -> {
@@ -55,7 +63,12 @@ public class GlobalExcetionHandler {
                     k -> new ArrayList<>()
             ).add(fieldError.getDefaultMessage());
         });
-        return ResponseEntity.badRequest().body(errors);
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                HttpStatus.BAD_REQUEST,
+                errors,
+                LocalDateTime.now()
+        );
+        return ResponseEntity.badRequest().body(errorResponseDto);
     }
-
 }
