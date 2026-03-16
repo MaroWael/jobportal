@@ -16,6 +16,7 @@ public class PathsConfig {
                 "/api/csrf-token/public",
                 "/api/auth/register/public",
                 "/api/contacts/public",
+                "/api/logging/public",
                 "/api/swagger-ui.html",
                 "/swagger-ui/**",
                 "/api/v3/api-docs/**",
