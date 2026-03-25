@@ -14,6 +14,6 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
     List<Contact> findContactByStatus(String status);
     List<Contact> findContactByStatus(String status, Sort sort);
     Page<Contact> findContactByStatus(String status, Pageable pageable);
-    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Modifying(flushAutomatically = true, clearAutomatically = true )
     int updateStatusById(@Param("status") String status, @Param("id") Long id, @Param("updateBy") String updateBy);
 }
