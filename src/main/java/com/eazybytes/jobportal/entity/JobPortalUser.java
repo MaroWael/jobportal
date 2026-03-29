@@ -47,4 +47,7 @@ public class JobPortalUser extends BaseEntity {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    private Profile profile;
+
 }
