@@ -1,6 +1,8 @@
 package com.eazybytes.jobportal.exception;
 
 import com.eazybytes.jobportal.dto.ErrorResponseDto;
+import io.micrometer.tracing.Tracer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -18,7 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExcetionHandler {
+    private final Tracer tracer;
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception exception, WebRequest webRequest) {
         Map<String, List<String>> errors = Map.of("message", List.of(exception.getMessage()));

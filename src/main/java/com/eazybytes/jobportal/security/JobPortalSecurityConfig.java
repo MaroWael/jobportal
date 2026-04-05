@@ -56,7 +56,8 @@ public class JobPortalSecurityConfig {
     SecurityFilterChain customSecurityFilterChain(HttpSecurity http) {
         return http
                 .csrf(csrfConfig -> csrfConfig.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                        .ignoringRequestMatchers("/actuator/**"))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(requests -> {
                         publicPaths.forEach(path -> requests.requestMatchers(path).permitAll());
